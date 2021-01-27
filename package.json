@@ -1,0 +1,16 @@
+{
+  "name": "modulpruefung",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "node server/server.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@types/mongodb": "^3.6.3",
+    "@types/node": "^14.14.22",
+    "mongodb": "^3.6.3"
+  }
+}
