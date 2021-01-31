@@ -1,22 +1,36 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <link rel="stylesheet" href="style.css">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Your profile</title>
 </head>
+
 <body>
-    <a href="main.html"><button id="main-btn">Hauptseite</button></a>
-    <input id="username" type="text" placeholder="Username">
-    <input id="fullname" type="text" placeholder="Name">
-    <input id="studiengang" type="text" placeholder="Studiengang">
-    <input id="semester" type="text" placeholder="Semester">
-    <input id="password" type="text" placeholder="Neues Passwort">
-    <input id="password_repeat" type="text" placeholder="Neues Passwort wiederholen">
-    <button id="save-profile">Profil speichern</button>
-    <span id="status"></span>
+    <nav>
+        <ul class="a">
+            <li><a href="main.html"><button id="main-btn">Hauptseite</button></a></li>
+        </ul>
+    </nav>
+    <div class="flexbox">
+        <div class="box">
+            <h1>Hier kannst du deine Daten ändern</h1>
+
+            <input id="username" type="text" placeholder="Username">
+            <input id="fullname" type="text" placeholder="Name">
+            <input id="studiengang" type="text" placeholder="Studiengang">
+            <input id="semester" type="text" placeholder="Semester">
+            <input id="password" type="text" placeholder="Neues Passwort">
+            <input id="password_repeat" type="text" placeholder="Neues Passwort wiederholen">
+            <button id="save-profile">Profil speichern</button>
+            <span id="status"></span>
+            
+        </div>
+    </div>
     <script src="src/baseurl.js"></script>
-   <script src="src/profile.js"></script>
+    <script src="src/profile.js"></script>
 </body>
+
 </html>

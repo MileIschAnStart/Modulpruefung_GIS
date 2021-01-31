@@ -33,6 +33,7 @@ async function main(){
         if(response.success){
             response.posts.forEach((post: Post) =>{
                 let elem = document.createElement("div");
+                elem.classList.add("spacePost");
                 elem.innerHTML = `von: ${post.fromUser}, um ${new Date(post.date).toLocaleString()}, Nachricht: ${post.text}`;
                 postsElem.appendChild(elem);
             });

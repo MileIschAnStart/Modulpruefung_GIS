@@ -13,6 +13,7 @@ async function mainFollow(){
     if(response.success && response.all && response.followed){
         response.all.forEach((name: string) =>{
             let mainDiv = document.createElement('div');
+            mainDiv.classList.add("userDiv");
             let li = document.createElement('li');
             let btn = document.createElement('button');
             li.innerHTML = name;
