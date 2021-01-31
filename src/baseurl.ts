@@ -1,4 +1,5 @@
 const BASEURL: string = "https://modulpruefung.herokuapp.com";
+// const BASEURL: string = "http://localhost:8100";
 
 function displayStatus(success: boolean, message: string){
     let statusField = document.getElementById('status');

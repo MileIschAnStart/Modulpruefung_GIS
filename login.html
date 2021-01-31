@@ -9,54 +9,57 @@
 </head>
 
 <body>
+    <div class="flexbox">
+        <div class="box links">
+            <h1>Login</h1>
+            <form action="">
+                <div>
+                    <label for="username">Username</label>
+                    <input type="text" name="username" id="username">
+                </div>
+                <div>
+                    <label for="password">Password</label>
+                    <input type="password" name="password" id="password">
+                </div>
+                <div>
+                    <button id="login-btn" type="submit">Login</button>
+                </div>
+            </form>
+        </div>
+    </div>
     <div>
-        <h1>Login</h1>
-    <form action="">
-        <div>
-            <label for="username">Username</label>
-            <input type="text" name="username" id="username">
-        </div>
-        <div>
-            <label for="password">Password</label>
-            <input type="password" name="password" id="password">
-        </div>
-        <div>
-            <button id="login-btn" type="submit">Login</button>
-        </div>
-    </form>
-</div><div>
-    <h1>Registrierung</h1>
-    <form>
-        <div>
-            <label for="register-username">Username</label>
-            <input type="text" name="register-username" id="register-username">
-        </div>
-        <div>
-            <label for="register-password">Passwort</label>
-            <input type="password" name="register-password" id="register-password">
-        </div>
-        <div>
-            <label for="password-repeat">Passwort wiederholen</label>
-            <input type="password" name="password-repeat" id="password-repeat">
-        </div>
-        <div>
-            <label for="fullname">Name, Vorname</label>
-            <input type="text" name="fullname" id="fullname">
-        </div>
-        <div>
-            <label for="semester">Semester</label>
-            <input type="text" name="semester" id="semester">
-        </div>
-        <div>
-            <label for="studiengang">Studiengang</label>
-            <input type="text" name="studiengang" id="studiengang">
-        </div>
-        <div>
-            <button id="register-btn" type="submit">Registrieren</button>
-        </div>
-    </form>
-</div>
-<span id="status"></span>
+        <h1>Registrierung</h1>
+        <form>
+            <div>
+                <label for="register-username">Username</label>
+                <input type="text" name="register-username" id="register-username">
+            </div>
+            <div>
+                <label for="register-password">Passwort</label>
+                <input type="password" name="register-password" id="register-password">
+            </div>
+            <div>
+                <label for="password-repeat">Passwort wiederholen</label>
+                <input type="password" name="password-repeat" id="password-repeat">
+            </div>
+            <div>
+                <label for="fullname">Name, Vorname</label>
+                <input type="text" name="fullname" id="fullname">
+            </div>
+            <div>
+                <label for="semester">Semester</label>
+                <input type="text" name="semester" id="semester">
+            </div>
+            <div>
+                <label for="studiengang">Studiengang</label>
+                <input type="text" name="studiengang" id="studiengang">
+            </div>
+            <div>
+                <button id="register-btn" type="submit">Registrieren</button>
+            </div>
+        </form>
+    </div>
+    <span id="status"></span>
     <!--<div>
         <label for="staySignedIn">stay signed in</label>
         <input type="checkbox">
