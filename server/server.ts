@@ -69,11 +69,6 @@ export namespace A08Server {
         return JSON.stringify({success: false});  
     }
 
-    async function userlist(request: URLSearchParams): Promise<string> {
-    //let result: User[] = await mongo.db("projekt").collection("users").find({}).toArray();  // Alle User in "result" speichern
-     //   return names.join("<br/>");
-    }
-
     async function calculateResponseText(url: string | undefined): Promise<string> {    // URL auslesesen
         let antwortText: string = "Die URL konnte nicht gefunden werden.";
         if (!url) {
@@ -85,17 +80,14 @@ export namespace A08Server {
         let urlNew: Url.URL  = new Url.URL(url, "http://localhost:8100");
         
 
-        if (urlNew.pathname === "/liste") {                             //wenn if-Bedingung greift, Antwort beschreiben und zurückgeben
-            antwortText = await userlist(urlNew.searchParams);                                 
-        }
-        else if (urlNew.pathname === "/registrierung") {
+        if (urlNew.pathname === "/registrierung") {
             antwortText = await doRegister(urlNew.searchParams);
         }
         else if (urlNew.pathname === "/login") {
             antwortText = await doLogin(urlNew.searchParams);
         }
         else if (urlNew.pathname === "/editprofile") {
-            antwortText = await doLogin(urlNew.searchParams);
+            antwortText = await editProfile(urlNew.searchParams);
         }
         else if (urlNew.pathname === "/post") {
             antwortText = await post(urlNew.searchParams);
@@ -103,9 +95,99 @@ export namespace A08Server {
         else if (urlNew.pathname === "/getposts") {
             antwortText = await getposts(urlNew.searchParams);
         }
+        else if(urlNew.pathname === "/getprofile"){
+            antwortText = await getProfile(urlNew.searchParams);
+        }
+        else if(urlNew.pathname === "/getUsers"){
+            antwortText = await getUsers(urlNew.searchParams);
+        }
+        else if(urlNew.pathname === "/follow"){
+            antwortText = await follow(urlNew.searchParams);
+        }
+        else if(urlNew.pathname === "/unfollow"){
+            antwortText = await unfollow(urlNew.searchParams);
+        }
 
 
         return antwortText;
+    }
+
+    async function follow(params: URLSearchParams){
+        let username = params.get("user");
+        let follow = params.get("follows");
+        if(!username || !follow){
+            return JSON.stringify({success: false});
+        }
+        await mongo.db("pruefung").collection("userfollows").insertOne({user: username, follows: follow});
+        return JSON.stringify({success: true});
+    }
+
+    async function unfollow(params: URLSearchParams){
+        let username = params.get("user");
+        let unfollow = params.get("unfollows");
+        if(!username || !unfollow){
+            return JSON.stringify({success: false});
+        }
+        await mongo.db("pruefung").collection("userfollows").deleteOne({user: username, follows: unfollow});
+        return JSON.stringify({success: true});
+    }
+
+    async function getUsers(params: URLSearchParams){
+        let username = params.get('username');
+        if(!username){
+            return JSON.stringify({success: false});
+        }
+        let allUsers: User[] = await mongo.db("pruefung").collection("users").find({}).toArray();  // [{name: "peter", fullname:""}]
+        let allUsersNames: string[] = allUsers.map((entry) => entry.username); // ["peter", "test"]
+        let followedUsers: UserFollows[] = await mongo.db("pruefung").collection("userfollows").find({user: username}).toArray();
+        let followedUsersNames: string[] = followedUsers.map((entry) => entry.follows); // ["test", "test2"]
+        let index = allUsersNames.indexOf(username);
+        allUsersNames.splice(index, 1);
+        return JSON.stringify({success: true, all: allUsersNames, followed: followedUsersNames});
+    }
+
+    async function editProfile(params: URLSearchParams){
+        let username: string | null = params.get("username");                                   //auf Key zugreifen und Value zurückgegeben
+        let password: string | null = params.get("password");
+        let fullname: string | null = params.get("fullname");
+        let semester: string | null = params.get("semester");
+        let studiengang: string | null = params.get("studiengang");
+        let oldUsername: string | null = params.get("oldUsername"); 
+
+        if(!oldUsername){
+            return JSON.stringify({success: false});
+        }
+        let setObj: User = {};
+        if(username){
+            setObj.username = username;
+        }
+        if(password){
+            setObj.password = password;
+        }
+        if(fullname){
+            setObj.fullname = fullname;
+        }
+        if(semester){
+            setObj.semester = semester;
+        }
+        if(studiengang){
+            setObj.studiengang = studiengang;
+        }
+        await mongo.db("pruefung").collection("users").updateOne({username: oldUsername}, {$set: setObj});
+        return JSON.stringify({success: true, newUser: username});
+    }
+
+    async function getProfile(params: URLSearchParams){
+        let username = params.get("username");
+        if(!username){
+            return JSON.stringify({success: false});
+        }
+        let result: User[] = await mongo.db("pruefung").collection("users").find({username: username}).toArray();
+        if(!result || result.length === 0){
+            return JSON.stringify({success: false});
+        }
+        let user = result[0];
+        return JSON.stringify({success: true, user: {username: user.username, fullname: user.fullname, semester: user.semester, studiengang: user.studiengang}});
     }
 
     async function getposts(params: URLSearchParams){
@@ -145,12 +227,12 @@ export namespace A08Server {
 }
 
 interface User {
-    _id: any
-    username: string;
-    password: string;
-    fullname: string;
-    semester: string;
-    studiengang: string;
+    _id?: any
+    username?: string;
+    password?: string;
+    fullname?: string;
+    semester?: string;
+    studiengang?: string;
 }
 
 interface Post {

@@ -4,9 +4,16 @@ let logoutBtn = document.getElementById("logout");
 let postsElem = document.getElementById("posts");
 let postBtn = document.getElementById("post");
 let postInput = document.getElementById("post-text");
+let profileBtn = document.getElementById("profile");
+profileBtn.addEventListener('click', profile);
 logoutBtn.addEventListener('click', logout);
 postBtn.addEventListener('click', post);
+function profile(evt) {
+    evt.preventDefault();
+    window.location.assign('profile.html');
+}
 async function main() {
+    postsElem.innerHTML = "";
     if (!loggedIn) {
         let hrefElem = document.createElement('a');
         hrefElem.setAttribute("href", "login.html");
@@ -26,7 +33,7 @@ async function main() {
             });
         }
         else {
-            console.log("failed");
+            displayStatus(false, "Es konnten keine Beiträge geladen werden");
         }
     }
 }
@@ -37,12 +44,12 @@ function logout() {
 }
 async function post() {
     if (!loggedIn) {
-        console.log("not logged in");
+        displayStatus(false, "Du bist nicht eingeloggt.");
         return;
     }
     let postText = postInput.value;
     if (!postText) {
-        console.log("no post text there");
+        displayStatus(false, "Der Posttext ist leer.");
         return;
     }
     let params = new URLSearchParams();
@@ -51,11 +58,10 @@ async function post() {
     let request = await fetch(BASEURL + "/post?" + params.toString());
     let response = await request.json();
     if (response.success) {
-        window.location.reload();
+        main();
     }
     else {
-        //TODO: error zeigen
-        console.log(response);
+        displayStatus(false, "Du konntest diesen Beitrag leider nicht posten.");
     }
 }
 //# sourceMappingURL=main.js.map

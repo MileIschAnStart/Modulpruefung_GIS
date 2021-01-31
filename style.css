@@ -5,3 +5,11 @@ body {
 #posts { 
     border: 1px solid black;
 }
+
+.red-error{
+    color: red;
+}
+
+.green-success{
+    color: green;
+}

@@ -16,7 +16,6 @@ submitLoginButton.addEventListener('click', submitLogin);
 submitRegisterButton.addEventListener('click', submitRegister);
 async function submitRegister(evt) {
     evt.preventDefault();
-    console.log("register");
     let username = registerUsernameField.value;
     let password = registerPasswordField.value;
     let passwordRepeat = registerPwRepeatField.value;
@@ -24,19 +23,19 @@ async function submitRegister(evt) {
     let semester = registerSemesterField.value;
     let studiengang = registerStudiengangField.value;
     if (!username || !password || !passwordRepeat || !fullname || !semester || !studiengang) {
-        console.log("error: Pflichtfelder");
+        displayStatus(false, "Es wurden nicht alle Pflichtfelder ausgefüllt.");
         return;
     }
     if (password !== passwordRepeat) {
-        console.log("error: Passwörter nicht identisch");
+        displayStatus(false, "Passwörter sind nicht identisch.");
         return;
     }
     let params = new URLSearchParams();
     params.append("username", username);
     params.append("password", password);
-    params.append("fullname", password);
-    params.append("semester", password);
-    params.append("studiengang", password);
+    params.append("fullname", fullname);
+    params.append("semester", semester);
+    params.append("studiengang", studiengang);
     let request = await fetch(BASEURL + "/registrierung?" + params.toString());
     let response = await request.json();
     if (response.success) {
@@ -44,17 +43,15 @@ async function submitRegister(evt) {
         window.location.assign('main.html');
     }
     else {
-        //TODO: error zeigen
-        console.log(response);
+        displayStatus(false, "Du konntest dich nicht registrieren.");
     }
 }
 async function submitLogin(evt) {
     evt.preventDefault();
-    console.log("login");
     let username = loginUserNameField.value;
     let password = passwordField.value;
     if (!username || !password) {
-        console.log("error: Pflichtfelder");
+        displayStatus(false, "Es wurden nicht alle Pflichtfelder ausgefüllt");
         return;
     }
     let params = new URLSearchParams();
@@ -67,8 +64,7 @@ async function submitLogin(evt) {
         window.location.assign('main.html');
     }
     else {
-        //TODO: error zeigen
-        console.log(response);
+        displayStatus(false, "Benutzername/Passwort-Kombination ist falsch.");
     }
 }
 //# sourceMappingURL=login.js.map
