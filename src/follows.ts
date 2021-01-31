@@ -1,4 +1,4 @@
-async function main(){
+async function mainFollow(){
     let listElement = document.getElementById('list');
     listElement.innerHTML = "";
     let username = localStorage.getItem('username');
@@ -33,7 +33,7 @@ async function main(){
         displayStatus(false, "Die Liste konnte nicht geladen werden");
     }
 }
-main();
+mainFollow();
 
 async function follow(user: string){
     let username = localStorage.getItem('username');
@@ -47,7 +47,7 @@ async function follow(user: string){
     let request = await fetch(BASEURL + "/follow?" + params.toString());
     let response = await request.json();
     if(response.success){
-        main();
+        mainFollow();
     }
     else{
         displayStatus(false, "Der User konnte nicht followed werden.");
@@ -66,7 +66,7 @@ async function unfollow(user: string){
     let request = await fetch(BASEURL + "/unfollow?" + params.toString());
     let response = await request.json();
     if(response.success){
-        main();
+        mainFollow();
     }
     else{
         displayStatus(false, "Der User konnte nicht unfollowed werden.");

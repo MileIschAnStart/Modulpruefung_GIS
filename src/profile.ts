@@ -43,14 +43,14 @@ async function save(evt: MouseEvent){
     if(response.success){
         localStorage.setItem('username', response.newUser);
         displayStatus(true, "Das Profil wurde erfolgreich gespeichert!");
-        main();
+        mainProfile();
     }
     else{
         displayStatus(false, "Das Profil konnte nicht geändert werden.");
     }
 }
 
-async function main(){
+async function mainProfile(){
     let user = localStorage.getItem('username');
     if(!user){
         window.location.assign('login.html');
@@ -72,7 +72,7 @@ async function main(){
     }
 }
 
-main();
+mainProfile();
 
 interface User {
     _id: any

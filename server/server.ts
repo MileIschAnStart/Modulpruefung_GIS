@@ -235,12 +235,12 @@ interface User {
     studiengang?: string;
 }
 
-interface Post {
-    _id: any;
-    text: string;
-    fromUser: string;
-    date: Date;
-}
+//interface Post {
+//    _id: any;
+//    text: string;
+ //   fromUser: string;
+ //   date: Date;
+//}
 
 interface UserFollows{
     _id: any;
