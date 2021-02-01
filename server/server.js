@@ -110,7 +110,7 @@ var A08Server;
         return JSON.stringify({ success: true });
     }
     async function getUsers(params) {
-        let username = params.get('username');
+        let username = params.get("username");
         if (!username) {
             return JSON.stringify({ success: false });
         }

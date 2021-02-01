@@ -11,23 +11,27 @@ rgb(235, 227, 209)
 }
 
 body {
-    background-color:white;
+    background-color:ivory;
     color: black;
-    font-family: Arial, Helvetica, sans-serif;
+    font-family: Candara;
     text-align: center;
 }
 
 h1{
-    color: white;
+    color: #474747;
     display: block;
-    font-size: 2em;
+    font-size: 3em;
     padding: 0.625em 2.5em 0.938em 2.5em;  
     border-radius: 2em;
+    font-weight: lighter;
+    border-bottom: 1px solid #474747;
+    padding-bottom: 1.5rem;
 }  
 h2{
-    color: white;
-    font-size: 2em;
+    color: ivory;
+    font-size: 2.5em;
     padding: 1em 0.2em;
+    font-weight: lighter;
 }  
 h3{
     color:white;
@@ -38,6 +42,26 @@ p{
     font-size: 1.5em;
     padding-top:1em;
 }
+label {
+    text-transform: uppercase;
+    padding-right: 2rem;
+}
+
+button {
+
+    cursor: pointer;
+    height: auto;
+    width: auto;
+    margin: 1rem;
+    padding: 0.5rem;
+    font-size: 0.875rem;
+    border: 0 none;
+}
+
+a {
+    
+    color: ivory;
+}
 
 /*Flexbox*/
 .flexbox{
@@ -45,17 +69,22 @@ p{
     display:flex;
     flex-direction: row;
     padding:2em;
+    
 }
 
 .box{
     width:100%;
-    background:rgb(235, 227, 209);
+    background:#474747;
     border-radius: 2em;
     margin-top: 2%;
     margin-bottom: 2%;
     flex:1;
+    color: ivory;
+    
 }
+
 .box.links{
+    background:#474747;
     margin-right: 2em;
     flex:1;
 }
@@ -79,11 +108,11 @@ nav li {
 
 
 nav li:hover{
-Background-color:rgb(235, 227, 209);
+Background-color:#474747;
 transform: rotate(20deg)
 }   
 
-ul.a{
+ul.a {
     list-style-type: none;
     margin: 0;
     padding: 0;
@@ -106,7 +135,7 @@ input[type=text], select, textarea, input[type=password] {
     margin-top: 0.25em;
     margin-bottom: 0.625em;
     resize: vertical;
-    
+    font-family: inherit;
     
   }
 
@@ -118,6 +147,22 @@ input[type=text], select, textarea, input[type=password] {
     margin: 5px;
     padding: 5px;
     height: 5rem;
+    font-size: 1rem;
+}
+
+#profile, #logout, #follow-btn, #main-btn {
+
+    background-color: #EAE3D9;
+    text-transform: uppercase;
+}
+
+#post {
+    text-transform: uppercase;
+}
+
+#post-text {
+    padding: 2rem;
+    font-size: 1rem;
 }
 
 /* Follow Bereich */
@@ -131,6 +176,12 @@ input[type=text], select, textarea, input[type=password] {
 .userDiv > li {
     text-decoration: none;
     list-style: none;
+    font-size: 1.3rem;
+}
+
+#follower-bereich {
+
+    margin-bottom: 5rem;
 }
 
 /* Profil Bereich */
@@ -142,6 +193,13 @@ input[type=text], select, textarea, input[type=password] {
     
 }
 
+.inputProfil {
+    font-size: 1rem;
+    padding: 0.5;
+}
+
+/* JavaScript */
+
 .red-error{
     color: red;
 }
@@ -149,3 +207,50 @@ input[type=text], select, textarea, input[type=password] {
 .green-success{
     color: green;
 }
+
+/* Media Queries */
+@media screen and (max-width: 600px) and (min-width: 100px) {
+    .flexbox {   
+      flex-direction: column;
+      padding:0;
+    }
+    h1{
+        font-size: 1.5rem;
+        padding: 0;
+        padding-bottom: 1rem;
+    }
+   
+    h2 {
+        font-size: 1.5rem;
+    }
+
+    .nav-btn {
+        padding: 0;
+        margin: 0;
+    }
+
+    label {
+        font-size: .7rem;
+    }
+
+    input[type=text], input[type=password] {
+        padding: 0;
+    }
+
+  }
+
+  @media screen and (max-width: 768px) and (min-width: 600px) {
+    
+    h1{
+        font-size: 2em;
+    }
+    h2{
+        font-size: 1.3em;
+    }
+    p{
+        font-size: 0.8em;
+    }
+
+  }
+
+  

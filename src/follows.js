@@ -1,30 +1,30 @@
 "use strict";
 async function mainFollow() {
-    let listElement = document.getElementById('list');
+    let listElement = document.getElementById("list");
     listElement.innerHTML = "";
-    let username = localStorage.getItem('username');
+    let username = localStorage.getItem("username");
     if (!username) {
-        window.location.assign('login.html');
+        window.location.assign("login.html");
         return;
     }
     let params = new URLSearchParams();
-    params.append('username', username);
+    params.append("username", username);
     let request = await fetch(BASEURL + "/getUsers?" + params.toString());
     let response = await request.json();
     if (response.success && response.all && response.followed) {
         response.all.forEach((name) => {
-            let mainDiv = document.createElement('div');
+            let mainDiv = document.createElement("div");
             mainDiv.classList.add("userDiv");
-            let li = document.createElement('li');
-            let btn = document.createElement('button');
+            let li = document.createElement("li");
+            let btn = document.createElement("button");
             li.innerHTML = name;
             if (response.followed.indexOf(name) !== -1) {
                 btn.innerHTML = "Unfollow";
-                btn.addEventListener('click', () => unfollow(name));
+                btn.addEventListener("click", () => unfollow(name));
             }
             else {
                 btn.innerHTML = "Follow";
-                btn.addEventListener('click', () => follow(name));
+                btn.addEventListener("click", () => follow(name));
             }
             mainDiv.appendChild(li);
             mainDiv.appendChild(btn);
@@ -37,9 +37,9 @@ async function mainFollow() {
 }
 mainFollow();
 async function follow(user) {
-    let username = localStorage.getItem('username');
+    let username = localStorage.getItem("username");
     if (!username) {
-        window.location.assign('login.html');
+        window.location.assign("login.html");
         return;
     }
     let params = new URLSearchParams();
@@ -55,9 +55,9 @@ async function follow(user) {
     }
 }
 async function unfollow(user) {
-    let username = localStorage.getItem('username');
+    let username = localStorage.getItem("username");
     if (!username) {
-        window.location.assign('login.html');
+        window.location.assign("login.html");
         return;
     }
     let params = new URLSearchParams();

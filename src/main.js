@@ -5,17 +5,17 @@ let postsElem = document.getElementById("posts");
 let postBtn = document.getElementById("post");
 let postInput = document.getElementById("post-text");
 let profileBtn = document.getElementById("profile");
-profileBtn.addEventListener('click', profile);
-logoutBtn.addEventListener('click', logout);
-postBtn.addEventListener('click', post);
+profileBtn.addEventListener("click", profile);
+logoutBtn.addEventListener("click", logout);
+postBtn.addEventListener("click", post);
 function profile(evt) {
     evt.preventDefault();
-    window.location.assign('profile.html');
+    window.location.assign("profile.html");
 }
 async function main() {
     postsElem.innerHTML = "";
     if (!loggedIn) {
-        let hrefElem = document.createElement('a');
+        let hrefElem = document.createElement("a");
         hrefElem.setAttribute("href", "login.html");
         hrefElem.innerHTML = "Um die Posts zu sehen, loggen Sie sich bitte ein.";
         postsElem.appendChild(hrefElem);

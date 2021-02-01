@@ -95,16 +95,16 @@ export namespace A08Server {
         else if (urlNew.pathname === "/getposts") {
             antwortText = await getposts(urlNew.searchParams);
         }
-        else if(urlNew.pathname === "/getprofile"){
+        else if (urlNew.pathname === "/getprofile") {
             antwortText = await getProfile(urlNew.searchParams);
         }
-        else if(urlNew.pathname === "/getUsers"){
+        else if (urlNew.pathname === "/getUsers") {
             antwortText = await getUsers(urlNew.searchParams);
         }
-        else if(urlNew.pathname === "/follow"){
+        else if (urlNew.pathname === "/follow") {
             antwortText = await follow(urlNew.searchParams);
         }
-        else if(urlNew.pathname === "/unfollow"){
+        else if (urlNew.pathname === "/unfollow") {
             antwortText = await unfollow(urlNew.searchParams);
         }
 
@@ -112,41 +112,41 @@ export namespace A08Server {
         return antwortText;
     }
 
-    async function follow(params: URLSearchParams){
-        let username = params.get("user");
-        let follow = params.get("follows");
-        if(!username || !follow){
+    async function follow(params: URLSearchParams): Promise<string> {
+        let username: string = params.get("user");
+        let follow: string = params.get("follows");
+        if (!username || !follow) {
             return JSON.stringify({success: false});
         }
         await mongo.db("pruefung").collection("userfollows").insertOne({user: username, follows: follow});
         return JSON.stringify({success: true});
     }
 
-    async function unfollow(params: URLSearchParams){
-        let username = params.get("user");
-        let unfollow = params.get("unfollows");
-        if(!username || !unfollow){
+    async function unfollow(params: URLSearchParams): Promise<string> {
+        let username: string = params.get("user");
+        let unfollow: string = params.get("unfollows");
+        if (!username || !unfollow) {
             return JSON.stringify({success: false});
         }
         await mongo.db("pruefung").collection("userfollows").deleteOne({user: username, follows: unfollow});
         return JSON.stringify({success: true});
     }
 
-    async function getUsers(params: URLSearchParams){
-        let username = params.get('username');
-        if(!username){
+    async function getUsers(params: URLSearchParams): Promise<string> {
+        let username: string = params.get("username");
+        if (!username) {
             return JSON.stringify({success: false});
         }
         let allUsers: User[] = await mongo.db("pruefung").collection("users").find({}).toArray();  // [{name: "peter", fullname:""}]
         let allUsersNames: string[] = allUsers.map((entry) => entry.username); // ["peter", "test"]
         let followedUsers: UserFollows[] = await mongo.db("pruefung").collection("userfollows").find({user: username}).toArray();
         let followedUsersNames: string[] = followedUsers.map((entry) => entry.follows); // ["test", "test2"]
-        let index = allUsersNames.indexOf(username);
+        let index: number = allUsersNames.indexOf(username);
         allUsersNames.splice(index, 1);
         return JSON.stringify({success: true, all: allUsersNames, followed: followedUsersNames});
     }
 
-    async function editProfile(params: URLSearchParams){
+    async function editProfile(params: URLSearchParams): Promise<string> {
         let username: string | null = params.get("username");                                   //auf Key zugreifen und Value zurückgegeben
         let password: string | null = params.get("password");
         let fullname: string | null = params.get("fullname");
@@ -154,58 +154,58 @@ export namespace A08Server {
         let studiengang: string | null = params.get("studiengang");
         let oldUsername: string | null = params.get("oldUsername"); 
 
-        if(!oldUsername){
+        if (!oldUsername) {
             return JSON.stringify({success: false});
         }
         let setObj: User = {};
-        if(username){
+        if (username) {
             setObj.username = username;
         }
-        if(password){
+        if (password) {
             setObj.password = password;
         }
-        if(fullname){
+        if (fullname) {
             setObj.fullname = fullname;
         }
-        if(semester){
+        if (semester) {
             setObj.semester = semester;
         }
-        if(studiengang){
+        if (studiengang) {
             setObj.studiengang = studiengang;
         }
         await mongo.db("pruefung").collection("users").updateOne({username: oldUsername}, {$set: setObj});
         return JSON.stringify({success: true, newUser: username});
     }
 
-    async function getProfile(params: URLSearchParams){
-        let username = params.get("username");
-        if(!username){
+    async function getProfile(params: URLSearchParams): Promise<string> {
+        let username: string = params.get("username");
+        if (!username) {
             return JSON.stringify({success: false});
         }
         let result: User[] = await mongo.db("pruefung").collection("users").find({username: username}).toArray();
-        if(!result || result.length === 0){
+        if (!result || result.length === 0) {
             return JSON.stringify({success: false});
         }
-        let user = result[0];
+        let user: User = result[0];
         return JSON.stringify({success: true, user: {username: user.username, fullname: user.fullname, semester: user.semester, studiengang: user.studiengang}});
     }
 
-    async function getposts(params: URLSearchParams){
-        let username = params.get("username");
-        if(!username){
+    async function getposts(params: URLSearchParams): Promise<string> {
+        let username: string = params.get("username");
+        if (!username) {
             return JSON.stringify({success: false});
         }
         let followedUsers: UserFollows[] = await mongo.db("pruefung").collection("userfollows").find({user: username}).toArray(); // [{name: "peter" , semester:"etc"}...]
         let usernames: string[] = followedUsers.map((entry: UserFollows) => entry.follows); // ["peter", "test"]
         usernames.push(username);
-        let posts = await mongo.db("pruefung").collection("posts").find({fromUser: {$in: usernames}}).sort({date: -1}).toArray();
+        let posts: any[] = await mongo.db("pruefung").collection("posts").find({fromUser: {$in: usernames}}).sort({date: -1}).toArray();
         return JSON.stringify({success: true, posts});
     }
 
-    async function post(params : URLSearchParams){
-        let username = params.get("username");
-        let postText = params.get("posttext");
-        if(!username || !postText){
+    async function post(params: URLSearchParams): Promise<string> {
+        let username: string = params.get("username");
+        let postText: any = params.get("posttext");
+        if (!username || !postText) {
             return JSON.stringify({success: false});
         }
         await mongo.db("pruefung").collection("posts").insertOne({fromUser: username, text: postText, date: new Date() });
@@ -242,7 +242,7 @@ interface User {
  //   date: Date;
 //}
 
-interface UserFollows{
+interface UserFollows {
     _id: any;
     user: string;
     follows: string;
