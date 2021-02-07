@@ -5,28 +5,28 @@ import * as Http from "http";
 
 let mongo: Mongo.MongoClient;
 
-//Datenbank-Connection
+
 async function DbConnect (url: string): Promise<void> {
     mongo = new Mongo.MongoClient(url);
     await mongo.connect();
 }
 
-//zu Db verbinden
+
 DbConnect("mongodb+srv://mile:010408@mike.et3um.mongodb.net/pruefung?retryWrites=true&w=majority");
 
-//in http-Server gehen
+
 export namespace A08Server {
     console.log("Starting server..");
 
-    //port aus Umgebungsvariabeln auslesen
+    
     let port: number = Number(process.env.PORT);
-    if (!port)                                  //wenn kein Port in den Umgebungsvariabeln gefunden wird, Port: 8100 nehmen
+    if (!port)
         port = 8100;
 
 
-    let server: Http.Server = Http.createServer();  //http-Server wird erstellt
-    server.addListener("request", onRequest);       //wenn Anfrage reinkommt, Funktion ausführen
-    server.addListener("listening", onListen);      //wenn Server gestartet wird
+    let server: Http.Server = Http.createServer();  
+    server.addListener("request", onRequest);       
+    server.addListener("listening", onListen);     
     server.listen(port);
 
 
@@ -35,24 +35,24 @@ export namespace A08Server {
         console.log("Listening..");
     }
 
-    async function doRegister(request: URLSearchParams): Promise<string> {      //params auslesen
-        let username: string | null = request.get("username");                                   //auf Key zugreifen und Value zurückgegeben
+    async function doRegister(request: URLSearchParams): Promise<string> {      
+        let username: string | null = request.get("username");                                
         let password: string | null = request.get("password");
         let fullname: string | null = request.get("fullname");
         let semester: string | null = request.get("semester");
         let studiengang: string | null = request.get("studiengang");
 
-        if (!username || !password || !fullname || !semester || !studiengang) {                     //wenn eines der Felder nicht gefüllt ist, dann wird der String zurückgegeben
+        if (!username || !password || !fullname || !semester || !studiengang) {                    
             return JSON.stringify({success: false});
         }
 
-        let result: string[] = await mongo.db("pruefung").collection("users").find({username}).toArray();      //Datenbankabfrage 
-        if (result.length > 0) {                                                                        // Wenn größer null: Es existiert bereits ein User
+        let result: string[] = await mongo.db("pruefung").collection("users").find({username}).toArray();      
+        if (result.length > 0) {                                                                        
             return JSON.stringify({success: false});
         }
 
 
-        await mongo.db("pruefung").collection("users").insertOne({username, password, fullname, semester, studiengang});  //falls User noch nicht existiert, dann lege einen an
+        await mongo.db("pruefung").collection("users").insertOne({username, password, fullname, semester, studiengang});  
         return JSON.stringify({success: true, username});
     }
 
@@ -69,7 +69,7 @@ export namespace A08Server {
         return JSON.stringify({success: false});  
     }
 
-    async function calculateResponseText(url: string | undefined): Promise<string> {    // URL auslesesen
+    async function calculateResponseText(url: string | undefined): Promise<string> {    
         let antwortText: string = "Die URL konnte nicht gefunden werden.";
         if (!url) {
             console.log("URL ist leer");
@@ -137,17 +137,17 @@ export namespace A08Server {
         if (!username) {
             return JSON.stringify({success: false});
         }
-        let allUsers: User[] = await mongo.db("pruefung").collection("users").find({}).toArray();  // [{name: "peter", fullname:""}]
-        let allUsersNames: string[] = allUsers.map((entry) => entry.username); // ["peter", "test"]
+        let allUsers: User[] = await mongo.db("pruefung").collection("users").find({}).toArray();  
+        let allUsersNames: string[] = allUsers.map((entry) => entry.username); 
         let followedUsers: UserFollows[] = await mongo.db("pruefung").collection("userfollows").find({user: username}).toArray();
-        let followedUsersNames: string[] = followedUsers.map((entry) => entry.follows); // ["test", "test2"]
+        let followedUsersNames: string[] = followedUsers.map((entry) => entry.follows); 
         let index: number = allUsersNames.indexOf(username);
         allUsersNames.splice(index, 1);
         return JSON.stringify({success: true, all: allUsersNames, followed: followedUsersNames});
     }
 
     async function editProfile(params: URLSearchParams): Promise<string> {
-        let username: string | null = params.get("username");                                   //auf Key zugreifen und Value zurückgegeben
+        let username: string | null = params.get("username");                                   
         let password: string | null = params.get("password");
         let fullname: string | null = params.get("fullname");
         let semester: string | null = params.get("semester");
@@ -195,8 +195,8 @@ export namespace A08Server {
         if (!username) {
             return JSON.stringify({success: false});
         }
-        let followedUsers: UserFollows[] = await mongo.db("pruefung").collection("userfollows").find({user: username}).toArray(); // [{name: "peter" , semester:"etc"}...]
-        let usernames: string[] = followedUsers.map((entry: UserFollows) => entry.follows); // ["peter", "test"]
+        let followedUsers: UserFollows[] = await mongo.db("pruefung").collection("userfollows").find({user: username}).toArray(); 
+        let usernames: string[] = followedUsers.map((entry: UserFollows) => entry.follows);
         usernames.push(username);
         let posts: any[] = await mongo.db("pruefung").collection("posts").find({fromUser: {$in: usernames}}).sort({date: -1}).toArray();
         return JSON.stringify({success: true, posts});
@@ -215,12 +215,12 @@ export namespace A08Server {
     async function onRequest(_request: Http.IncomingMessage, _response: Http.ServerResponse): Promise<void> {
         
 
-        let response: string = await calculateResponseText(_request.url);                   //Antwort empfangen
+        let response: string = await calculateResponseText(_request.url);                   
 
         _response.setHeader("content-type", "text/html; charset=utf-8");
         _response.setHeader("Access-Control-Allow-Origin", "*");
 
-        _response.write(response);                                                  //Antwort herausgeben
+        _response.write(response);                                                  
 
         _response.end();
     }

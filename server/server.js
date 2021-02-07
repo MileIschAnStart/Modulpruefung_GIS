@@ -5,42 +5,38 @@ const Mongo = require("mongodb");
 const Url = require("url");
 const Http = require("http");
 let mongo;
-//Datenbank-Connection
 async function DbConnect(url) {
     mongo = new Mongo.MongoClient(url);
     await mongo.connect();
 }
-//zu Db verbinden
 DbConnect("mongodb+srv://mile:010408@mike.et3um.mongodb.net/pruefung?retryWrites=true&w=majority");
-//in http-Server gehen
 var A08Server;
 (function (A08Server) {
     console.log("Starting server..");
-    //port aus Umgebungsvariabeln auslesen
     let port = Number(process.env.PORT);
-    if (!port) //wenn kein Port in den Umgebungsvariabeln gefunden wird, Port: 8100 nehmen
+    if (!port)
         port = 8100;
-    let server = Http.createServer(); //http-Server wird erstellt
-    server.addListener("request", onRequest); //wenn Anfrage reinkommt, Funktion ausführen
-    server.addListener("listening", onListen); //wenn Server gestartet wird
+    let server = Http.createServer();
+    server.addListener("request", onRequest);
+    server.addListener("listening", onListen);
     server.listen(port);
     function onListen() {
         console.log("Listening..");
     }
     async function doRegister(request) {
-        let username = request.get("username"); //auf Key zugreifen und Value zurückgegeben
+        let username = request.get("username");
         let password = request.get("password");
         let fullname = request.get("fullname");
         let semester = request.get("semester");
         let studiengang = request.get("studiengang");
-        if (!username || !password || !fullname || !semester || !studiengang) { //wenn eines der Felder nicht gefüllt ist, dann wird der String zurückgegeben
+        if (!username || !password || !fullname || !semester || !studiengang) {
             return JSON.stringify({ success: false });
         }
-        let result = await mongo.db("pruefung").collection("users").find({ username }).toArray(); //Datenbankabfrage 
-        if (result.length > 0) { // Wenn größer null: Es existiert bereits ein User
+        let result = await mongo.db("pruefung").collection("users").find({ username }).toArray();
+        if (result.length > 0) {
             return JSON.stringify({ success: false });
         }
-        await mongo.db("pruefung").collection("users").insertOne({ username, password, fullname, semester, studiengang }); //falls User noch nicht existiert, dann lege einen an
+        await mongo.db("pruefung").collection("users").insertOne({ username, password, fullname, semester, studiengang });
         return JSON.stringify({ success: true, username });
     }
     async function doLogin(request) {
@@ -114,16 +110,16 @@ var A08Server;
         if (!username) {
             return JSON.stringify({ success: false });
         }
-        let allUsers = await mongo.db("pruefung").collection("users").find({}).toArray(); // [{name: "peter", fullname:""}]
-        let allUsersNames = allUsers.map((entry) => entry.username); // ["peter", "test"]
+        let allUsers = await mongo.db("pruefung").collection("users").find({}).toArray();
+        let allUsersNames = allUsers.map((entry) => entry.username);
         let followedUsers = await mongo.db("pruefung").collection("userfollows").find({ user: username }).toArray();
-        let followedUsersNames = followedUsers.map((entry) => entry.follows); // ["test", "test2"]
+        let followedUsersNames = followedUsers.map((entry) => entry.follows);
         let index = allUsersNames.indexOf(username);
         allUsersNames.splice(index, 1);
         return JSON.stringify({ success: true, all: allUsersNames, followed: followedUsersNames });
     }
     async function editProfile(params) {
-        let username = params.get("username"); //auf Key zugreifen und Value zurückgegeben
+        let username = params.get("username");
         let password = params.get("password");
         let fullname = params.get("fullname");
         let semester = params.get("semester");
@@ -168,8 +164,8 @@ var A08Server;
         if (!username) {
             return JSON.stringify({ success: false });
         }
-        let followedUsers = await mongo.db("pruefung").collection("userfollows").find({ user: username }).toArray(); // [{name: "peter" , semester:"etc"}...]
-        let usernames = followedUsers.map((entry) => entry.follows); // ["peter", "test"]
+        let followedUsers = await mongo.db("pruefung").collection("userfollows").find({ user: username }).toArray();
+        let usernames = followedUsers.map((entry) => entry.follows);
         usernames.push(username);
         let posts = await mongo.db("pruefung").collection("posts").find({ fromUser: { $in: usernames } }).sort({ date: -1 }).toArray();
         return JSON.stringify({ success: true, posts });
@@ -184,10 +180,10 @@ var A08Server;
         return JSON.stringify({ success: true });
     }
     async function onRequest(_request, _response) {
-        let response = await calculateResponseText(_request.url); //Antwort empfangen
+        let response = await calculateResponseText(_request.url);
         _response.setHeader("content-type", "text/html; charset=utf-8");
         _response.setHeader("Access-Control-Allow-Origin", "*");
-        _response.write(response); //Antwort herausgeben
+        _response.write(response);
         _response.end();
     }
 })(A08Server = exports.A08Server || (exports.A08Server = {}));
